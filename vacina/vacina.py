@@ -1,5 +1,5 @@
 import tkinter as tk
-from pycep_correios import get_address_from_cep, exceptions, WebService
+from brazilcep import get_address_from_cep, exceptions, WebService
 from datetime import date
 import re
 
@@ -104,7 +104,7 @@ def validar_data_nascimento(data):
     mes = int(data[1])
     ano = int(data[2])
 
-    if len(str(dia)) == 2 and (len(str(mes)) == 2 or len(str(mes)) == 1) and len(str(ano)) == 4: # Verifica o tamanho de cada elemento
+    if (len(str(dia)) == 2 or len(str(dia)) == 1) and (len(str(mes)) == 2 or len(str(mes)) == 1) and len(str(ano)) == 4: # Verifica o tamanho de cada elemento
         if 1900 < ano <= data_atual.year: # Verifica se o ano está entre 1900 e o ano atual
             if 1 <= mes <= 12:
                 if mes != 2:

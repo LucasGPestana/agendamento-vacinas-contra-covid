@@ -267,30 +267,32 @@ def janela_cadastro():
 
     janela_cadastro.mainloop()
 
-# Variáveis constantes
+if __name__ == "__main__": # Main do código (Início)
 
-FUNDO_PADRAO = "#2d2d30"
-FONTE_PADRAO = ("Arial 10")
-COR_FONTE_PADRAO = "#FFFFFF"
-COR_FONTE_PADRAO_2 = "#000000"
+    # Variáveis constantes
 
-
-main_window = tk.Tk()
-
-# Configuração da Janela
-main_window.geometry("600x400") # Estabelece as dimensões da janela
-main_window.title("Conecte SUS")
-main_window["bg"] = FUNDO_PADRAO # Fundo da janela
-
-# Título da página
-h1_principal = tk.Label(master=main_window, text="CONECT SUS", font=("Arial 12 bold"), bg=FUNDO_PADRAO, fg=COR_FONTE_PADRAO)
-h1_principal.pack(side=tk.TOP, pady=20) # Posiciona o Label na parte de cima da janela, dando uma margem externa de 20px acima
+    FUNDO_PADRAO = "#2d2d30"
+    FONTE_PADRAO = ("Arial 10")
+    COR_FONTE_PADRAO = "#FFFFFF"
+    COR_FONTE_PADRAO_2 = "#000000"
 
 
-btn_cadastro = tk.Button(master=main_window, width=16, text="Cadastrar Dados", font=FONTE_PADRAO, fg=COR_FONTE_PADRAO_2, border=12, command=janela_cadastro)
-btn_cadastro.pack(side=tk.TOP, pady=80) # Posiciona o botão na parte de cima da janela, dando uma margem externa de 80px acima
+    main_window = tk.Tk()
 
-btn_arquivo = tk.Button(master=main_window, width=16, text="Gerar Arquivo", font=FONTE_PADRAO, fg=COR_FONTE_PADRAO_2, border=12, command=gerarArquivo)
-btn_arquivo.pack(side=tk.TOP)
+    # Configuração da Janela
+    main_window.geometry("600x400") # Estabelece as dimensões da janela
+    main_window.title("Conecte SUS")
+    main_window["bg"] = FUNDO_PADRAO # Fundo da janela
 
-main_window.mainloop()
+    # Título da página
+    h1_principal = tk.Label(master=main_window, text="CONECT SUS", font=("Arial 12 bold"), bg=FUNDO_PADRAO, fg=COR_FONTE_PADRAO)
+    h1_principal.pack(side=tk.TOP, pady=20) # Posiciona o Label na parte de cima da janela, dando uma margem externa de 20px acima
+
+
+    btn_cadastro = tk.Button(master=main_window, width=16, text="Cadastrar Dados", font=FONTE_PADRAO, fg=COR_FONTE_PADRAO_2, border=12, command=janela_cadastro)
+    btn_cadastro.pack(side=tk.TOP, pady=80) # Posiciona o botão na parte de cima da janela, dando uma margem externa de 80px acima
+
+    btn_arquivo = tk.Button(master=main_window, width=16, text="Gerar Arquivo", font=FONTE_PADRAO, fg=COR_FONTE_PADRAO_2, border=12, command=gerarArquivo)
+    btn_arquivo.pack(side=tk.TOP)
+
+    main_window.mainloop()

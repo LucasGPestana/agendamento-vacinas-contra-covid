@@ -7,14 +7,14 @@ import re
 dados_pacientes = list()
 
 def limpar_dados(entry_nome, entry_nome_mae, entry_cep, resposta_rua, 
-                 resposta_complemento, resposta_bairro, resposta_cidade, 
+                 resposta_complemento, resposta_numero, resposta_bairro, resposta_cidade, 
                  resposta_estado, entry_cpf, entry_nascimento):
     entry_nome.delete(0, tk.END)
     entry_nome_mae.delete(0, tk.END)
     entry_cep.delete(0, tk.END)
     resposta_rua['text'] = ""
     resposta_complemento.delete(0, tk.END)
-    resposta_rua.delete(0, tk.END)
+    resposta_numero.delete(0, tk.END)
     resposta_bairro['text'] = ""
     resposta_cidade['text'] = ""
     resposta_estado['text'] = ""
@@ -44,17 +44,35 @@ def cadastrar_dados(entry_nome, entry_nome_mae, entry_cep, resposta_rua,
     # Verifica se todos os dados estão corretamente preenchidos
 
     if validar_nome(nome):
+
+        # Coloca todos os primeiros caracteres dos nomes com letras maiúsculas
+
+        nome = nome.split() # Divide o nome em uma lista pelo espaço
+        
+        for i in range(len(nome)):
+            nome[i] = nome[i].capitalize()
+        nome = " ".join(nome) # Junta a lista nome em uma string com espaços entre os elementos
+
         if validar_nome(nome_mae):
+
+            # Faz o mesmo ao nome da mãe
+
+            nome_mae = nome_mae.split()
+            
+            for i in range(len(nome_mae)):
+                nome_mae[i] = nome_mae[i].capitalize()
+            nome_mae = " ".join(nome_mae)
+
             if validar_cep(cep):
                 if endereco != "" and str(resposta_numero.get()).isnumeric(): # Verifica se o endereço não é vazio e se o número do endereço é realmente um número
                     if validar_cpf(cpf):
                         if validar_data_nascimento(data_nascimento):
-                            dados_pacientes.append({"Nome": nome.capitalize(), "Nome da Mãe": nome_mae.capitalize(), "CEP": cep, "Endereço": endereco, "CPF": cpf, "Data de Nascimento": data_nascimento})
+                            dados_pacientes.append({"Nome": nome, "Nome da Mãe": nome_mae, "CEP": cep, "Endereço": endereco, "CPF": cpf, "Data de Nascimento": data_nascimento})
                             label_resposta['fg'] = COR_SUCESSO
                             label_resposta['text'] = ""
                             label_resposta['text'] = "Cadastro realizado com sucesso!"
                             print(dados_pacientes)
-                            limpar_dados(entry_nome, entry_nome_mae, entry_cep, resposta_rua, resposta_complemento, resposta_bairro, resposta_cidade, resposta_estado, entry_cpf, entry_nascimento)
+                            limpar_dados(entry_nome, entry_nome_mae, entry_cep, resposta_rua, resposta_complemento, resposta_numero, resposta_bairro, resposta_cidade, resposta_estado, entry_cpf, entry_nascimento)
                             entry_nome.focus_set()
                         else:
                             label_resposta['fg'] = COR_FALHA

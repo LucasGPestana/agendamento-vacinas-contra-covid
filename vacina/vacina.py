@@ -211,7 +211,7 @@ def validar_cep(cep):
     else:
         return False
 
-def verificar_endereco(entry_cep, resposta_rua, resposta_complemento, resposta_bairro, resposta_cidade, resposta_estado, text_endereco):
+def verificar_endereco(entry_cep, resposta_rua, resposta_bairro, resposta_cidade, resposta_estado, text_endereco):
   
   text_endereco['text'] = "" # Apaga o que estiver escrito previamente
    
@@ -232,7 +232,6 @@ def verificar_endereco(entry_cep, resposta_rua, resposta_complemento, resposta_b
           
           # Adiciona as informações do endereço aos Labels
           resposta_rua['text'] = endereco['street']
-          resposta_complemento['text'] = endereco['complement']
           resposta_bairro['text'] = endereco['district']
           resposta_cidade['text']= endereco['city']
           resposta_estado['text'] = endereco['uf']

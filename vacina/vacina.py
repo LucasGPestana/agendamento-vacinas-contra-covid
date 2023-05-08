@@ -6,7 +6,9 @@ import re
 
 dados_pacientes = list()
 
-def limpar_dados(entry_nome, entry_nome_mae, entry_cep, resposta_rua, resposta_complemento, resposta_bairro, resposta_cidade, resposta_estado, entry_cpf, entry_nascimento):
+def limpar_dados(entry_nome, entry_nome_mae, entry_cep, resposta_rua, 
+                 resposta_complemento, resposta_bairro, resposta_cidade, 
+                 resposta_estado, entry_cpf, entry_nascimento):
     entry_nome.delete(0, tk.END)
     entry_nome_mae.delete(0, tk.END)
     entry_cep.delete(0, tk.END)
@@ -26,7 +28,9 @@ def gerarArquivo():
     
     arquivo.close()
 
-def cadastrar_dados(entry_nome, entry_nome_mae, entry_cep, resposta_rua, resposta_complemento, resposta_bairro, resposta_cidade, resposta_estado, entry_cpf, entry_nascimento, label_resposta):
+def cadastrar_dados(entry_nome, entry_nome_mae, entry_cep, resposta_rua,
+                     resposta_complemento, resposta_bairro, resposta_cidade,
+                       resposta_estado, entry_cpf, entry_nascimento, label_resposta):
     
     nome = entry_nome.get()
     nome_mae = entry_nome_mae.get()
@@ -128,10 +132,7 @@ def validar_data_nascimento(data):
     if (len(str(dia)) == 2) and (len(str(mes)) == 2 ) and len(str(ano)) == 4: # Verifica o tamanho de cada elemento
 
         # Converte as variáveis para inteiros
-
-        dia = int(dia)
-        mes = int(mes)
-        ano = int(ano)
+        dia, mes, ano = map(int, [dia, mes, ano]) # Itera cada elemento da lista, convertendo-o para inteiro
 
         if 1900 < ano <= data_atual.year: # Verifica se o ano está entre 1900 e o ano atual
             if 1 <= mes <= 12:
@@ -202,9 +203,10 @@ def verificar_endereco(entry_cep, resposta_rua, resposta_complemento, resposta_b
        try:
     
           endereco = get_address_from_cep(cep, webservice=WebService.APICEP)
-
+          
+          # Substitui valores vazios por "Não Identificado"
           for info in endereco.keys():
-              if endereco[info] == "": # Caso alguma das informações do endereço estiver faltando
+              if endereco[info] == "":
                   endereco[info] = "Não Identificado"
           
           print(endereco)
@@ -227,6 +229,7 @@ def verificar_endereco(entry_cep, resposta_rua, resposta_complemento, resposta_b
            entry_cep.focus_set()
     
   else:
+      # CEP inválido
       text_endereco['fg'] = COR_FALHA # Muda a cor do texto para vermelho
       text_endereco['text'] = "CEP inválido!"
       entry_cep.focus_set()
@@ -244,127 +247,224 @@ def janela_cadastro():
     # Padrão da posição dos itens, onde (linha, coluna): posição label = (x, y) e posição entry = (x, y + 1)
 
     # Campo Nome do paciente
-    label_nome = tk.Label(master=janela_cadastro, text="Nome Completo: ", font=FONTE_PADRAO, fg=COR_FONTE_PADRAO, bg=FUNDO_PADRAO)
+    label_nome = tk.Label(master=janela_cadastro, 
+                          text="Nome Completo: ", 
+                          font=FONTE_PADRAO, 
+                          fg=COR_FONTE_PADRAO, 
+                          bg=FUNDO_PADRAO)
     label_nome.grid(row=0, column=0, padx=10, pady=10) # Posiciona na linha 1 e coluna 1 da janela
 
-    entry_nome = tk.Entry(master=janela_cadastro, fg=COR_FONTE_PADRAO,bg=FUNDO_ELEMENTOS)
+    entry_nome = tk.Entry(master=janela_cadastro, 
+                          fg=COR_FONTE_PADRAO, 
+                          bg=FUNDO_ELEMENTOS)
     entry_nome.grid(row=0, column=1, padx=10, pady=10) # Posiciona na linha 1 e coluna 2 da janela
 
     # Campo Nome da mãe
-    label_nome_mae = tk.Label(master=janela_cadastro, text="Nome Completo da Mãe: ", font=FONTE_PADRAO, fg=COR_FONTE_PADRAO, bg=FUNDO_PADRAO)
+    label_nome_mae = tk.Label(master=janela_cadastro, 
+                              text="Nome Completo da Mãe: ", 
+                              font=FONTE_PADRAO, 
+                              fg=COR_FONTE_PADRAO, 
+                              bg=FUNDO_PADRAO)
     label_nome_mae.grid(row=1, column=0, padx=10, pady=10)
 
-    entry_nome_mae = tk.Entry(master=janela_cadastro, fg=COR_FONTE_PADRAO,bg=FUNDO_ELEMENTOS)
+    entry_nome_mae = tk.Entry(master=janela_cadastro, 
+                              fg=COR_FONTE_PADRAO, 
+                              bg=FUNDO_ELEMENTOS)
     entry_nome_mae.grid(row=1, column=1, padx=10, pady=10)
 
     # Campo CEP do paciente
-    label_cep = tk.Label(master=janela_cadastro, text="CEP do Paciente: ", font=FONTE_PADRAO, fg=COR_FONTE_PADRAO, bg=FUNDO_PADRAO)
+    label_cep = tk.Label(master=janela_cadastro, 
+                         text="CEP do Paciente: ", 
+                         font=FONTE_PADRAO, 
+                         fg=COR_FONTE_PADRAO, 
+                         bg=FUNDO_PADRAO)
     label_cep.grid(row=2, column=0, padx=10, pady=10)
 
-    entry_cep = tk.Entry(master=janela_cadastro, fg=COR_FONTE_PADRAO, bg=FUNDO_ELEMENTOS)
+    entry_cep = tk.Entry(master=janela_cadastro, 
+                         fg=COR_FONTE_PADRAO, 
+                         bg=FUNDO_ELEMENTOS)
     entry_cep.grid(row=2, column=1, padx=10, pady=10)
 
     # Resposta da verificação do CEP
 
-    resposta_endereco = tk.Label(master=janela_cadastro, text="", font=FONTE_PADRAO, fg=COR_FONTE_PADRAO, bg=FUNDO_PADRAO)
+    resposta_endereco = tk.Label(master=janela_cadastro, 
+                                 text="", 
+                                 font=FONTE_PADRAO, 
+                                 fg=COR_FONTE_PADRAO, 
+                                 bg=FUNDO_PADRAO)
     resposta_endereco.grid(row=2, column=3)
     
     # Labels para o endereço
 
     # Rua
 
-    label_rua = tk.Label(master=janela_cadastro, text="Rua: ", font=FONTE_PADRAO, fg=COR_FONTE_PADRAO, bg=FUNDO_PADRAO)
+    label_rua = tk.Label(master=janela_cadastro, 
+                         text="Rua: ", 
+                         font=FONTE_PADRAO, 
+                         fg=COR_FONTE_PADRAO, 
+                         bg=FUNDO_PADRAO)
     label_rua.grid(row=3, column=0, padx=10, pady=10)
 
     # O state disabled não permite que se digite no entry
-    resposta_rua = tk.Label(master=janela_cadastro, text="", font=FONTE_PADRAO, fg=COR_FONTE_PADRAO, bg=FUNDO_PADRAO)
+    resposta_rua = tk.Label(master=janela_cadastro, 
+                            text="", 
+                            font=FONTE_PADRAO, 
+                            fg=COR_FONTE_PADRAO, 
+                            bg=FUNDO_PADRAO)
     resposta_rua.grid(row=3, column=1, padx=10, pady=10)
 
     # Complemento
 
-    label_complemento = tk.Label(master=janela_cadastro, text="Complemento: ", font=FONTE_PADRAO, fg=COR_FONTE_PADRAO, bg=FUNDO_PADRAO)
+    label_complemento = tk.Label(master=janela_cadastro, 
+                                 text="Complemento: ", 
+                                 font=FONTE_PADRAO, 
+                                 fg=COR_FONTE_PADRAO, 
+                                 bg=FUNDO_PADRAO)
     label_complemento.grid(row=4, column=0, padx=10, pady=10)
 
-    resposta_complemento = tk.Label(master=janela_cadastro, text="", font=FONTE_PADRAO, fg=COR_FONTE_PADRAO, bg=FUNDO_PADRAO)
+    resposta_complemento = tk.Label(master=janela_cadastro, 
+                                    text="", 
+                                    font=FONTE_PADRAO, 
+                                    fg=COR_FONTE_PADRAO, 
+                                    bg=FUNDO_PADRAO)
     resposta_complemento.grid(row=4, column=1, padx=10, pady=10)
 
     # Bairro
 
-    label_bairro = tk.Label(master=janela_cadastro, text="Bairro: ", font=FONTE_PADRAO, fg=COR_FONTE_PADRAO, bg=FUNDO_PADRAO)
+    label_bairro = tk.Label(master=janela_cadastro, 
+                            text="Bairro: ", 
+                            font=FONTE_PADRAO, 
+                            fg=COR_FONTE_PADRAO, 
+                            bg=FUNDO_PADRAO)
     label_bairro.grid(row=5, column=0, padx=10, pady=10)
 
-    resposta_bairro = tk.Label(master=janela_cadastro, text="", font=FONTE_PADRAO, fg=COR_FONTE_PADRAO, bg=FUNDO_PADRAO)
+    resposta_bairro = tk.Label(master=janela_cadastro, 
+                               text="", 
+                               font=FONTE_PADRAO, 
+                               fg=COR_FONTE_PADRAO, 
+                               bg=FUNDO_PADRAO)
     resposta_bairro.grid(row=5, column=1, padx=10, pady=10)
 
     # Cidade
 
-    label_cidade = tk.Label(master=janela_cadastro, text="Cidade: ", font=FONTE_PADRAO, fg=COR_FONTE_PADRAO, bg=FUNDO_PADRAO)
+    label_cidade = tk.Label(master=janela_cadastro, 
+                            text="Cidade: ", 
+                            font=FONTE_PADRAO, 
+                            fg=COR_FONTE_PADRAO, 
+                            bg=FUNDO_PADRAO)
     label_cidade.grid(row=6, column=0, padx=10, pady=10)
 
-    resposta_cidade = tk.Label(master=janela_cadastro, text="", font=FONTE_PADRAO, fg=COR_FONTE_PADRAO, bg=FUNDO_PADRAO)
+    resposta_cidade = tk.Label(master=janela_cadastro, 
+                               text="", 
+                               font=FONTE_PADRAO, 
+                               fg=COR_FONTE_PADRAO, 
+                               bg=FUNDO_PADRAO)
     resposta_cidade.grid(row=6, column=1, padx=10, pady=10)
 
     # Estado
 
-    label_estado = tk.Label(master=janela_cadastro, text="Estado: ", font=FONTE_PADRAO, fg=COR_FONTE_PADRAO, bg=FUNDO_PADRAO)
+    label_estado = tk.Label(master=janela_cadastro, 
+                            text="Estado: ", 
+                            font=FONTE_PADRAO, 
+                            fg=COR_FONTE_PADRAO, 
+                            bg=FUNDO_PADRAO)
     label_estado.grid(row=6, column=2, padx=10, pady=10)
 
-    resposta_estado = tk.Label(master=janela_cadastro, text="", font=FONTE_PADRAO, fg=COR_FONTE_PADRAO, bg=FUNDO_PADRAO)
+    resposta_estado = tk.Label(master=janela_cadastro, 
+                               text="", font=FONTE_PADRAO, 
+                               fg=COR_FONTE_PADRAO, 
+                               bg=FUNDO_PADRAO)
     resposta_estado.grid(row=6, column=3, padx=10, pady=10)
 
     def verificar_endereco_wrapper(): # Serve de callback
         verificar_endereco(entry_cep, resposta_rua, resposta_complemento, resposta_bairro, resposta_cidade, resposta_estado, resposta_endereco)
 
     # Botão para verificar o endereço
-    btn_endereco = tk.Button(master=janela_cadastro, text="Verificar Endereço", font=FONTE_PADRAO, fg=COR_FONTE_PADRAO_2, bg=FUNDO_ELEMENTOS, border=2, command=verificar_endereco_wrapper)
+    btn_endereco = tk.Button(master=janela_cadastro, 
+                             text="Verificar Endereço", 
+                             font=FONTE_PADRAO, 
+                             fg=COR_FONTE_PADRAO, 
+                             bg=FUNDO_ELEMENTOS, 
+                             border=2, 
+                             command=verificar_endereco_wrapper)
     btn_endereco.grid(row=2, column=2)
 
     # Campo CPF do paciente (row 4)
-    label_cpf = tk.Label(master=janela_cadastro, text="CPF do Paciente: ", font=FONTE_PADRAO, fg=COR_FONTE_PADRAO, bg=FUNDO_PADRAO)
+    label_cpf = tk.Label(master=janela_cadastro, 
+                         text="CPF do Paciente: ", 
+                         font=FONTE_PADRAO, 
+                         fg=COR_FONTE_PADRAO, 
+                         bg=FUNDO_PADRAO)
     label_cpf.grid(row=7, column=0, padx=10, pady=10)
 
-    entry_cpf = tk.Entry(master=janela_cadastro, fg=COR_FONTE_PADRAO, bg=FUNDO_ELEMENTOS)
+    entry_cpf = tk.Entry(master=janela_cadastro, 
+                         fg=COR_FONTE_PADRAO, 
+                         bg=FUNDO_ELEMENTOS)
     entry_cpf.grid(row=7, column=1, padx=10, pady=10)
 
-    label_cpf_obs = tk.Label(master=janela_cadastro, text="Obs: CPFs já cadastrados constam como inválidos!", font=FONTE_PADRAO, fg=COR_FONTE_PADRAO, bg=FUNDO_PADRAO)
+    label_cpf_obs = tk.Label(master=janela_cadastro, 
+                             text="Obs: CPFs já cadastrados constam como inválidos!", 
+                             font=FONTE_PADRAO, 
+                             fg=COR_FONTE_PADRAO, 
+                             bg=FUNDO_PADRAO)
     label_cpf_obs.grid(row=7, column=2, padx=10, pady=10)
 
     # Campo Data de nascimento do paciente (row 5)
-    label_data_nascimento = tk.Label(master=janela_cadastro, text="Data de Nascimento (dd/mm/yyyy): ", font=FONTE_PADRAO, fg=COR_FONTE_PADRAO, bg=FUNDO_PADRAO)
+    label_data_nascimento = tk.Label(master=janela_cadastro, 
+                                     text="Data de Nascimento (dd/mm/yyyy): ", 
+                                     font=FONTE_PADRAO, 
+                                     fg=COR_FONTE_PADRAO, 
+                                     bg=FUNDO_PADRAO)
     label_data_nascimento.grid(row=8, column=0, padx=10, pady=10)
 
-    entry_data_nascimento = tk.Entry(master=janela_cadastro, fg=COR_FONTE_PADRAO, bg=FUNDO_ELEMENTOS)
+    entry_data_nascimento = tk.Entry(master=janela_cadastro, 
+                                     fg=COR_FONTE_PADRAO, 
+                                     bg=FUNDO_ELEMENTOS)
     entry_data_nascimento.grid(row=8, column=1, padx=10, pady=10)
 
     def cadastrar_dados_wrapper(): # Serve de callback
         cadastrar_dados(entry_nome, entry_nome_mae, entry_cep, resposta_rua, resposta_complemento, resposta_bairro, resposta_cidade, resposta_estado, entry_cpf, entry_data_nascimento, label_resposta)
 
     # Botão para confirmar o cadastro do paciente
-    btn_cadastrar = tk.Button(master=janela_cadastro, text="Cadastrar Dados", font=FONTE_PADRAO, fg=COR_FONTE_PADRAO, bg=FUNDO_ELEMENTOS, border=5, command=cadastrar_dados_wrapper)
+    btn_cadastrar = tk.Button(master=janela_cadastro, 
+                              text="Cadastrar Dados", 
+                              font=FONTE_PADRAO, 
+                              fg=COR_FONTE_PADRAO, 
+                              bg=FUNDO_ELEMENTOS, 
+                              border=5, 
+                              command=cadastrar_dados_wrapper)
     btn_cadastrar.grid(row=9, column=2, padx=10, pady=10)
 
     # Botão para cancelar o cadastro do paciente
-    btn_cancelar = tk.Button(master=janela_cadastro, text="Cancelar", height=1, font=FONTE_PADRAO, fg=COR_FONTE_PADRAO, bg=FUNDO_ELEMENTOS, border=5, command=janela_cadastro.destroy)
+    btn_cancelar = tk.Button(master=janela_cadastro, 
+                             text="Cancelar", 
+                             height=1, 
+                             font=FONTE_PADRAO, 
+                             fg=COR_FONTE_PADRAO, 
+                             bg=FUNDO_ELEMENTOS, 
+                             border=5, 
+                             command=janela_cadastro.destroy)
     btn_cancelar.grid(row=9, column=3, padx=10, pady=10)
 
     # Resposta do botão
-    label_resposta = tk.Label(master=janela_cadastro, text="", font=FONTE_PADRAO, fg=COR_FONTE_PADRAO, bg=FUNDO_PADRAO)
+    label_resposta = tk.Label(master=janela_cadastro, 
+                              text="", font=FONTE_PADRAO, 
+                              fg=COR_FONTE_PADRAO, 
+                              bg=FUNDO_PADRAO)
     label_resposta.grid(row=10, column=2, padx=10, pady=10)
 
     janela_cadastro.mainloop()
 
+# Variáveis constantes
+
+FUNDO_PADRAO = "white"
+FUNDO_ELEMENTOS = "#d3d3d3"
+FONTE_PADRAO = ("Arial 10")
+COR_FONTE_PADRAO = "blue"
+COR_SUCESSO = "#008000"
+COR_FALHA = "#FF0000"
+
 if __name__ == "__main__": # Main do código (Início)
-
-    # Variáveis constantes
-
-    FUNDO_PADRAO = "white"
-    FUNDO_ELEMENTOS = "#d3d3d3"
-    FONTE_PADRAO = ("Arial 10")
-    COR_FONTE_PADRAO = "blue"
-    COR_FONTE_PADRAO_2 = "blue"
-    COR_SUCESSO = "#008000"
-    COR_FALHA = "#FF0000"
-
 
     main_window = tk.Tk()
 
@@ -374,7 +474,11 @@ if __name__ == "__main__": # Main do código (Início)
     main_window["bg"] = FUNDO_PADRAO # Fundo da janela
 
     # Título da página
-    h1_principal = tk.Label(master=main_window, text="CONECT SUS", font=("Arial 12 bold"), bg=FUNDO_PADRAO, fg=COR_FONTE_PADRAO)
+    h1_principal = tk.Label(master=main_window, 
+                            text="CONECT SUS", 
+                            font=("Arial 12 bold"), 
+                            bg=FUNDO_PADRAO, 
+                            fg=COR_FONTE_PADRAO)
     h1_principal.pack(side=tk.TOP, pady=20) # Posiciona o Label na parte de cima da janela, dando uma margem externa de 20px acima
 
     # Logo SUS
@@ -382,13 +486,33 @@ if __name__ == "__main__": # Main do código (Início)
     photo = ImageTk.PhotoImage(logo) # Carrega a imagem aberta
     tk.Label(master=main_window, image=photo).pack(side=tk.TOP, pady=10) # Poe a imagem carregada dentro de um label
 
-    btn_cadastro = tk.Button(master=main_window, width=16, text="Cadastrar Dados", font=FONTE_PADRAO, fg=COR_FONTE_PADRAO, bg=FUNDO_ELEMENTOS, border=12, command=janela_cadastro)
+    btn_cadastro = tk.Button(master=main_window, 
+                             width=16, 
+                             text="Cadastrar Dados", 
+                             font=FONTE_PADRAO, 
+                             fg=COR_FONTE_PADRAO, 
+                             bg=FUNDO_ELEMENTOS, 
+                             border=12, 
+                             command=janela_cadastro)
     btn_cadastro.pack(side=tk.TOP, pady=20) # Posiciona o botão na parte de cima da janela, dando uma margem externa de 80px acima
 
-    btn_arquivo = tk.Button(master=main_window, width=16, text="Gerar Arquivo", font=FONTE_PADRAO, fg=COR_FONTE_PADRAO, bg=FUNDO_ELEMENTOS, border=12, command=gerarArquivo)
+    btn_arquivo = tk.Button(master=main_window, 
+                            width=16, text="Gerar Arquivo", 
+                            font=FONTE_PADRAO, 
+                            fg=COR_FONTE_PADRAO, 
+                            bg=FUNDO_ELEMENTOS, 
+                            border=12, 
+                            command=gerarArquivo)
     btn_arquivo.pack(side=tk.TOP, pady=20)
 
-    btn_fechar = tk.Button(master=main_window, width=16, text="Fechar", font=FONTE_PADRAO, fg=COR_FONTE_PADRAO, bg=FUNDO_ELEMENTOS, border=12, command=main_window.destroy)
+    btn_fechar = tk.Button(master=main_window, 
+                           width=16, 
+                           text="Fechar", 
+                           font=FONTE_PADRAO, 
+                           fg=COR_FONTE_PADRAO, 
+                           bg=FUNDO_ELEMENTOS, 
+                           border=12, 
+                           command=main_window.destroy)
     btn_fechar.pack(side=tk.TOP, pady=20)
 
     main_window.mainloop()

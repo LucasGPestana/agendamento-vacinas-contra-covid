@@ -13,7 +13,8 @@ def limpar_dados(entry_nome, entry_nome_mae, entry_cep, resposta_rua,
     entry_nome_mae.delete(0, tk.END)
     entry_cep.delete(0, tk.END)
     resposta_rua['text'] = ""
-    resposta_complemento['text'] = ""
+    resposta_complemento.delete(0, tk.END)
+    resposta_rua.delete(0, tk.END)
     resposta_bairro['text'] = ""
     resposta_cidade['text'] = ""
     resposta_estado['text'] = ""
@@ -29,13 +30,13 @@ def gerarArquivo():
     arquivo.close()
 
 def cadastrar_dados(entry_nome, entry_nome_mae, entry_cep, resposta_rua,
-                     resposta_complemento, resposta_bairro, resposta_cidade,
+                     resposta_complemento, resposta_numero, resposta_bairro, resposta_cidade,
                        resposta_estado, entry_cpf, entry_nascimento, label_resposta):
     
     nome = entry_nome.get()
     nome_mae = entry_nome_mae.get()
     cep = entry_cep.get()
-    endereco = f"Rua: {resposta_rua['text']}, Complemento: {resposta_complemento['text']}, Bairro: {resposta_bairro['text']}, Cidade:{resposta_cidade['text']}, Estado: {resposta_estado['text']}"
+    endereco = f"Rua: {resposta_rua['text']}, Complemento: {resposta_complemento.get()}, Numero: {resposta_numero.get()}, Bairro: {resposta_bairro['text']}, Cidade:{resposta_cidade['text']}, Estado: {resposta_estado['text']}"
     cpf = entry_cpf.get()
     data_nascimento = entry_nascimento.get()
 
@@ -45,7 +46,7 @@ def cadastrar_dados(entry_nome, entry_nome_mae, entry_cep, resposta_rua,
     if validar_nome(nome):
         if validar_nome(nome_mae):
             if validar_cep(cep):
-                if endereco != "":
+                if endereco != "" and str(resposta_numero.get()).isnumeric(): # Verifica se o endereço não é vazio e se o número do endereço é realmente um número
                     if validar_cpf(cpf):
                         if validar_data_nascimento(data_nascimento):
                             dados_pacientes.append({"Nome": nome.capitalize(), "Nome da Mãe": nome_mae.capitalize(), "CEP": cep, "Endereço": endereco, "CPF": cpf, "Data de Nascimento": data_nascimento})
@@ -238,7 +239,7 @@ def janela_cadastro():
     
     janela_cadastro = tk.Tk()
 
-    janela_cadastro.geometry("1000x500")
+    janela_cadastro.geometry("1000x550")
     janela_cadastro.title("Cadastro de Dados da Vacinação")
     janela_cadastro["bg"] = FUNDO_PADRAO
 
@@ -256,7 +257,8 @@ def janela_cadastro():
 
     entry_nome = tk.Entry(master=janela_cadastro, 
                           fg=COR_FONTE_PADRAO, 
-                          bg=FUNDO_ELEMENTOS)
+                          bg=FUNDO_ELEMENTOS,
+                          width=35)
     entry_nome.grid(row=0, column=1, padx=10, pady=10) # Posiciona na linha 1 e coluna 2 da janela
 
     # Campo Nome da mãe
@@ -269,7 +271,8 @@ def janela_cadastro():
 
     entry_nome_mae = tk.Entry(master=janela_cadastro, 
                               fg=COR_FONTE_PADRAO, 
-                              bg=FUNDO_ELEMENTOS)
+                              bg=FUNDO_ELEMENTOS,
+                              width=35)
     entry_nome_mae.grid(row=1, column=1, padx=10, pady=10)
 
     # Campo CEP do paciente
@@ -322,12 +325,24 @@ def janela_cadastro():
                                  bg=FUNDO_PADRAO)
     label_complemento.grid(row=4, column=0, padx=10, pady=10)
 
-    resposta_complemento = tk.Label(master=janela_cadastro, 
-                                    text="", 
-                                    font=FONTE_PADRAO, 
+    resposta_complemento = tk.Entry(master=janela_cadastro,   
                                     fg=COR_FONTE_PADRAO, 
-                                    bg=FUNDO_PADRAO)
+                                    bg=FUNDO_ELEMENTOS)
     resposta_complemento.grid(row=4, column=1, padx=10, pady=10)
+
+    # Número
+
+    label_numero = tk.Label(master=janela_cadastro,
+                            text="Número: ",
+                            font=FONTE_PADRAO,
+                            fg=COR_FONTE_PADRAO,
+                            bg=FUNDO_PADRAO)
+    label_numero.grid(row=5, column=0, padx=10, pady=10)
+
+    resposta_numero = tk.Entry(master=janela_cadastro,
+                            fg=COR_FONTE_PADRAO,
+                            bg=FUNDO_ELEMENTOS)
+    resposta_numero.grid(row=5, column=1, padx=10, pady=10)
 
     # Bairro
 
@@ -336,14 +351,14 @@ def janela_cadastro():
                             font=FONTE_PADRAO, 
                             fg=COR_FONTE_PADRAO, 
                             bg=FUNDO_PADRAO)
-    label_bairro.grid(row=5, column=0, padx=10, pady=10)
+    label_bairro.grid(row=6, column=0, padx=10, pady=10)
 
     resposta_bairro = tk.Label(master=janela_cadastro, 
                                text="", 
                                font=FONTE_PADRAO, 
                                fg=COR_FONTE_PADRAO, 
                                bg=FUNDO_PADRAO)
-    resposta_bairro.grid(row=5, column=1, padx=10, pady=10)
+    resposta_bairro.grid(row=6, column=1, padx=10, pady=10)
 
     # Cidade
 
@@ -352,14 +367,14 @@ def janela_cadastro():
                             font=FONTE_PADRAO, 
                             fg=COR_FONTE_PADRAO, 
                             bg=FUNDO_PADRAO)
-    label_cidade.grid(row=6, column=0, padx=10, pady=10)
+    label_cidade.grid(row=7, column=0, padx=10, pady=10)
 
     resposta_cidade = tk.Label(master=janela_cadastro, 
                                text="", 
                                font=FONTE_PADRAO, 
                                fg=COR_FONTE_PADRAO, 
                                bg=FUNDO_PADRAO)
-    resposta_cidade.grid(row=6, column=1, padx=10, pady=10)
+    resposta_cidade.grid(row=7, column=1, padx=10, pady=10)
 
     # Estado
 
@@ -368,13 +383,13 @@ def janela_cadastro():
                             font=FONTE_PADRAO, 
                             fg=COR_FONTE_PADRAO, 
                             bg=FUNDO_PADRAO)
-    label_estado.grid(row=6, column=2, padx=10, pady=10)
+    label_estado.grid(row=8, column=0, padx=10, pady=10)
 
     resposta_estado = tk.Label(master=janela_cadastro, 
                                text="", font=FONTE_PADRAO, 
                                fg=COR_FONTE_PADRAO, 
                                bg=FUNDO_PADRAO)
-    resposta_estado.grid(row=6, column=3, padx=10, pady=10)
+    resposta_estado.grid(row=8, column=1, padx=10, pady=10)
 
     def verificar_endereco_wrapper(): # Serve de callback
         verificar_endereco(entry_cep, resposta_rua, resposta_complemento, resposta_bairro, resposta_cidade, resposta_estado, resposta_endereco)
@@ -395,19 +410,19 @@ def janela_cadastro():
                          font=FONTE_PADRAO, 
                          fg=COR_FONTE_PADRAO, 
                          bg=FUNDO_PADRAO)
-    label_cpf.grid(row=7, column=0, padx=10, pady=10)
+    label_cpf.grid(row=9, column=0, padx=10, pady=10)
 
     entry_cpf = tk.Entry(master=janela_cadastro, 
                          fg=COR_FONTE_PADRAO, 
                          bg=FUNDO_ELEMENTOS)
-    entry_cpf.grid(row=7, column=1, padx=10, pady=10)
+    entry_cpf.grid(row=9, column=1, padx=10, pady=10)
 
     label_cpf_obs = tk.Label(master=janela_cadastro, 
                              text="Obs: CPFs já cadastrados constam como inválidos!", 
                              font=FONTE_PADRAO, 
                              fg=COR_FONTE_PADRAO, 
                              bg=FUNDO_PADRAO)
-    label_cpf_obs.grid(row=7, column=2, padx=10, pady=10)
+    label_cpf_obs.grid(row=9, column=2, padx=10, pady=10)
 
     # Campo Data de nascimento do paciente (row 5)
     label_data_nascimento = tk.Label(master=janela_cadastro, 
@@ -415,15 +430,15 @@ def janela_cadastro():
                                      font=FONTE_PADRAO, 
                                      fg=COR_FONTE_PADRAO, 
                                      bg=FUNDO_PADRAO)
-    label_data_nascimento.grid(row=8, column=0, padx=10, pady=10)
+    label_data_nascimento.grid(row=10, column=0, padx=10, pady=10)
 
     entry_data_nascimento = tk.Entry(master=janela_cadastro, 
                                      fg=COR_FONTE_PADRAO, 
                                      bg=FUNDO_ELEMENTOS)
-    entry_data_nascimento.grid(row=8, column=1, padx=10, pady=10)
+    entry_data_nascimento.grid(row=10, column=1, padx=10, pady=10)
 
     def cadastrar_dados_wrapper(): # Serve de callback
-        cadastrar_dados(entry_nome, entry_nome_mae, entry_cep, resposta_rua, resposta_complemento, resposta_bairro, resposta_cidade, resposta_estado, entry_cpf, entry_data_nascimento, label_resposta)
+        cadastrar_dados(entry_nome, entry_nome_mae, entry_cep, resposta_rua, resposta_complemento, resposta_numero, resposta_bairro, resposta_cidade, resposta_estado, entry_cpf, entry_data_nascimento, label_resposta)
 
     # Botão para confirmar o cadastro do paciente
     btn_cadastrar = tk.Button(master=janela_cadastro, 
@@ -433,7 +448,7 @@ def janela_cadastro():
                               bg=FUNDO_ELEMENTOS, 
                               border=5, 
                               command=cadastrar_dados_wrapper)
-    btn_cadastrar.grid(row=9, column=2, padx=10, pady=10)
+    btn_cadastrar.grid(row=11, column=2, padx=10, pady=10)
 
     # Botão para cancelar o cadastro do paciente
     btn_cancelar = tk.Button(master=janela_cadastro, 
@@ -444,14 +459,14 @@ def janela_cadastro():
                              bg=FUNDO_ELEMENTOS, 
                              border=5, 
                              command=janela_cadastro.destroy)
-    btn_cancelar.grid(row=9, column=3, padx=10, pady=10)
+    btn_cancelar.grid(row=11, column=3, padx=10, pady=10)
 
     # Resposta do botão
     label_resposta = tk.Label(master=janela_cadastro, 
                               text="", font=FONTE_PADRAO, 
                               fg=COR_FONTE_PADRAO, 
                               bg=FUNDO_PADRAO)
-    label_resposta.grid(row=10, column=2, padx=10, pady=10)
+    label_resposta.grid(row=12, column=2, padx=10, pady=10)
 
     janela_cadastro.mainloop()
 

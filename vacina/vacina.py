@@ -206,7 +206,7 @@ def validar_cep(cep):
     cep = "".join(cep.replace("-", " ").split())
 
     # Verifica se o CEP possui o tamanho correto e se contém apenas números
-    if len(cep) == 8 and cep.isnumeric():
+    if len(cep) == 8:
         return True
     else:
         return False
@@ -242,6 +242,10 @@ def verificar_endereco(entry_cep, resposta_rua, resposta_bairro, resposta_cidade
            entry_cep.focus_set() # Foca no entry
 
        except exceptions.InvalidCEP:
+           text_endereco['fg'] = COR_FALHA # Muda a cor do texto para vermelho
+           text_endereco['text'] = "CEP inválido!"
+           entry_cep.focus_set()
+       except ValueError:
            text_endereco['fg'] = COR_FALHA # Muda a cor do texto para vermelho
            text_endereco['text'] = "CEP inválido!"
            entry_cep.focus_set()
@@ -409,7 +413,7 @@ def janela_cadastro():
     resposta_estado.grid(row=8, column=1, padx=10, pady=10)
 
     def verificar_endereco_wrapper(): # Serve de callback
-        verificar_endereco(entry_cep, resposta_rua, resposta_complemento, resposta_bairro, resposta_cidade, resposta_estado, resposta_endereco)
+        verificar_endereco(entry_cep, resposta_rua, resposta_bairro, resposta_cidade, resposta_estado, resposta_endereco)
 
     # Botão para verificar o endereço
     btn_endereco = tk.Button(master=janela_cadastro, 
